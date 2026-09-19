@@ -1,0 +1,13 @@
+{
+  "name": "DexterMes",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "node .github/scripts/update.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {}
+}
