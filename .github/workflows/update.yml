@@ -1,0 +1,35 @@
+name: Update
+
+on:
+  schedule:
+    - cron: "0 * * * *"
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Run script
+        run: node .github/scripts/update.js
+        env:
+          WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
+
+      - name: Commit changes (single commit)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git commit -m "chore: update profile" || echo "No changes"
+
+          # Reset branch so only 1 commit exists
+          git fetch origin main
+          git reset $(git commit-tree HEAD^{tree} -m "chore: update profile")
+          git push --force https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }} HEAD:main
